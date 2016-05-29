@@ -1,71 +1,64 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
 using FormatConverter.Convertion.Abstract;
 using FormatConverter.Convertion.Deserializer;
 using FormatConverter.Convertion.Serializer;
-using File = FormatConverter.Convertion.Utils.File;
 
 namespace FormatConverter.Convertion
 {
-    public sealed class Converter
+    public class Converter : IConverter
     {
-        private readonly string _source;
-        private readonly string _destination;
+        private readonly IDictionary<string, ISerializer> _serializers;
+        private readonly IDictionary<string, IDeserializer> _deserializers;
 
-        public Converter(string source, string destination)
+        public Converter(IDictionary<string, ISerializer> serializers, IDictionary<string, IDeserializer> deserializers)
         {
-            _source = source;
-            _destination = destination;
+            _serializers = serializers;
+            _deserializers = deserializers;
         }
 
-        public void Convert()
+        public void Convert(string source, string destination)
         {
-            string sourceFormat = _extensionFrom(_source);
-            string destinationFormat = _extensionFrom(_destination);
-            string sourceContents = new File(_source).Content();
+            string sourceFormat = GetExtension(source);
+            string destinationFormat = GetExtension(destination);
+            string sourceContents = File.ReadAllText(source);
+            string destinationFileContent = ConvertToFormat(sourceContents, sourceFormat, destinationFormat);
 
-            string destinationFileContent = _convertToFormat(sourceContents, sourceFormat, destinationFormat);
-            File.WriteFile(_destination, destinationFileContent);
-
+            File.WriteAllText(destination, destinationFileContent);
         }
 
-        private string _convertToFormat(string sourceContent, string sourceFormat, string destinationFormat)
+        private string ConvertToFormat(string sourceContent, string sourceFormat, string destinationFormat)
         {
-            IDeserializer deseralizer = _deserializerFromFormat(sourceFormat);
-            ISerializer serializer = _serializerFromFormat(destinationFormat);
-
+            IDeserializer deseralizer = GetDeserializer(sourceFormat);
+            ISerializer serializer = GetSerializer(destinationFormat);
             object deserialized = deseralizer.Deserilalize(sourceContent);
+
             return serializer.Serialize(deserialized);
         }
 
-        private IDeserializer _deserializerFromFormat(string sourceFormat)
+        private IDeserializer GetDeserializer(string sourceFormat)
         {
-            switch (sourceFormat)
+            if (_deserializers.ContainsKey(sourceFormat))
             {
-                case "yaml":
-                    return new YamlDeserializer();
-                case "json":
-                    return new JsonDeserializer();
-                default:
-                    throw new ArgumentException("Unknown format", sourceFormat);
+                return _deserializers[sourceFormat];
             }
+
+            throw new InvalidOperationException("Extension is not supported");
         }
 
-        private ISerializer _serializerFromFormat(string destinationFormat)
+        private ISerializer GetSerializer(string destinationFormat)
         {
-            switch (destinationFormat)
+            if (_serializers.ContainsKey(destinationFormat))
             {
-
-                case "yaml":
-                    return new YamlSerializer();
-                case "json":
-                    return new JsonSerializer();
-                default:
-                    throw new ArgumentException("Unknown format", destinationFormat);
-
+                return _serializers[destinationFormat];
             }
+
+            throw new InvalidOperationException("Extension is not supported");
         }
 
-        private string _extensionFrom(string source) =>
-            System.IO.Path.GetExtension(source).Remove(0, 1);
+        private static string GetExtension(string source) =>
+            Path.GetExtension(source).Remove(0, 1);
     }
 }
