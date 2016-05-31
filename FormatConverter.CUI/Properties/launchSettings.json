@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FormatConverter.CUI": {
+      "commandName": "Project",
+      "commandLineArgs": "demo.yaml convertedYamlToJson.json"
+    }
+  }
+}
