@@ -8,9 +8,9 @@
     "FormatConverter.Converter": "1.0.0-*",
     "Microsoft.NETCore.App": {
       "type": "platform",
-      "version": "1.0.0-rc2-3002702"
-    },
-    "SimpleInjector": "3.1.5"    
+      "version": "1.0.1"
+    },    
+    "SimpleInjector": "3.2.7"
   },
 
   "frameworks": {

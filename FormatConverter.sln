@@ -1,13 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FormatConverter.CUI", "FormatConverter.CUI\FormatConverter.CUI.xproj", "{15721C3F-7B92-47CA-A4E5-36B1258F7C34}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FormatConverter.Converter", "FormatConverter.Converter\FormatConverter.Converter.xproj", "{C46DED82-E569-4A03-9F2B-AD988FB2C02F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E334729E-5A61-44FE-B56A-5622071141EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B1CB48CA-9D86-4152-BFBC-A09089BD2BD0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9B64BB12-800F-4632-965C-347FA00DF72D}"
+	ProjectSection(SolutionItems) = preProject
+		gobal.json = gobal.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

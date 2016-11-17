@@ -23,22 +23,22 @@ namespace FormatConverter.Convertion
         {
             string sourceFormat = GetExtension(source);
             string destinationFormat = GetExtension(destination);
-            string sourceContents = File.ReadAllText(source);
-            string destinationFileContent = ConvertToFormat(sourceContents, sourceFormat, destinationFormat);
+            string sourceData = File.ReadAllText(source);
+            string destinationData = ConvertToFormat(sourceData, sourceFormat, destinationFormat);
 
-            File.WriteAllText(destination, destinationFileContent);
+            File.WriteAllText(destination, destinationData);
         }
 
         private string ConvertToFormat(string sourceContent, string sourceFormat, string destinationFormat)
         {
-            IDeserializer deseralizer = GetDeserializer(sourceFormat);
-            ISerializer serializer = GetSerializer(destinationFormat);
-            object deserialized = deseralizer.Deserilalize(sourceContent);
+            IDeserializer deseralizer = GetDeserializerFromFormat(sourceFormat);
+            ISerializer serializer = GetSerializerFromFormat(destinationFormat);
+            object deserializedData = deseralizer.Deserilalize(sourceContent);
 
-            return serializer.Serialize(deserialized);
+            return serializer.Serialize(deserializedData);
         }
 
-        private IDeserializer GetDeserializer(string sourceFormat)
+        private IDeserializer GetDeserializerFromFormat(string sourceFormat)
         {
             if (_deserializers.ContainsKey(sourceFormat))
             {
@@ -48,7 +48,7 @@ namespace FormatConverter.Convertion
             throw new InvalidOperationException("Extension is not supported");
         }
 
-        private ISerializer GetSerializer(string destinationFormat)
+        private ISerializer GetSerializerFromFormat(string destinationFormat)
         {
             if (_serializers.ContainsKey(destinationFormat))
             {
